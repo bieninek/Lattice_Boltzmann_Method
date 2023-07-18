@@ -74,7 +74,15 @@ Poza tymi metodami, w klasie znajdują się gettery i setery.
 Symulację realizuje klasa Main. Na początku znajduje się nadawanie warunków początkowych i tworzenie potrzebnych obiektów.
 Najpierw wykonuję __streaming__. Wywołuję w tym celu dwie metody klasy Cell, które rozkład równowagowy i wyjściowy. Stężenia oblicza wywoływana później metoda, dla pierwszej warunki stężenie brane jest z warunków początkowych.
 ```java
-            // streaming
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    space[j][i].countFEq();
+                    space[j][i].countFOut();
+                }
+            }
+```
+Po tym następuje __kolizja__. Patrzę na sąsiadów komórki i pobieram od nich odpowiednie strumienie wyjściowe. Zwracam uwagę tez na to, czy komórka nie ma za sąsiada ścianki. Jeśli tak, to następuje odbicie od niej – przypisuję wartość -1.0, która jest potem odpowiednio interpretowana. Rozbudowany warunek w instrukcji warunkowej jest spowodowany ścianką.
+```java
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     float[] neighbours = new float[4];
@@ -99,16 +107,6 @@ Najpierw wykonuję __streaming__. Wywołuję w tym celu dwie metody klasy Cell, 
                         neighbours[2] = space[i][j+1].getfOut()[0];
                     }
                     space[i][j].countFIn(neighbours);
-                }
-            }
-```
-Po tym następuje __kolizja__. Patrzę na sąsiadów komórki i pobieram od nich odpowiednie strumienie wyjściowe. Zwracam uwagę tez na to, czy komórka nie ma za sąsiada ścianki. Jeśli tak, to następuje odbicie od niej – przypisuję wartość -1.0, która jest potem odpowiednio interpretowana. Rozbudowany warunek w instrukcji warunkowej jest spowodowany ścianką.
-```java
-            // collision
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    space[j][i].countFEq();
-                    space[j][i].countFOut();
                 }
             }
 ```
