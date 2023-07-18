@@ -136,7 +136,7 @@ Początkowo symulacje uruchomiłem dla obszaru bez ścianki.
 Ciekawie widać różnicę na zrzucie ekranu z wieloma zdjęciami (numer oznacza numer iteracji).  
 !(2.png)  
 Symulacja była prowadzona mniej więcej do osiągnięcia równowagi.  
-Druga symulacja była na obszarze ze ścianką.
+Druga symulacja była na obszarze ze ścianką.  
 !(3.png)  
 Zrzut ekranu:  
 !(4.png)  
