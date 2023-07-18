@@ -132,16 +132,16 @@ Na koniec drukuję obraz, zapisuję go do pliku.
 
 # Wyniki modelowania
 Początkowo symulacje uruchomiłem dla obszaru bez ścianki.  
-!(1.png)  
+![](1.png)  
 Ciekawie widać różnicę na zrzucie ekranu z wieloma zdjęciami (numer oznacza numer iteracji).  
-!(2.png)  
+![](2.png)  
 Symulacja była prowadzona mniej więcej do osiągnięcia równowagi.  
 Druga symulacja była na obszarze ze ścianką.  
-!(3.png)  
+![](3.png)  
 Zrzut ekranu:  
-!(4.png)  
+![](4.png)  
 Symulacja nie doprowadziła do równowagi w tej samej ilości iteracji, widać, że przez ściankę utrudnione jest mieszanie. Dlatego tez powtórzyłem to wszystko do osiągnięcia równowagi. Wydruki robione rzadziej.  
-!(5.png)  
+![](5.png)  
 Stworzyłem na podstawie klatek zdjęć dwa filmiki pokazujące dyfuzję:
 - Obszaru bez ścianki: https://photos.app.goo.gl/yEnRLDcmYQAUeF8u7
 - Obszaru ze ścianką: https://photos.app.goo.gl/w6vKTiXu4MzWB16k8
