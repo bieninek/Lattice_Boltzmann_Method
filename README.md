@@ -1,5 +1,5 @@
-# Opis modelu i realizacji
-Program składa się z dwóch klas: Cell.java oraz Main.java. Klasa Main.java zawiera realizację kolejnych punktów instrukcji, zawartych we wskazówkach do zadania:
+# Description of the model and implementation
+The program consists of two classes: Cell.java and Main.java. The Main.java class contains the implementation of the following instructions included in the task instructions:
 ```java
 // ======= directions ==========
     // 1 up, 2 right, 3 down, 4 left
@@ -10,9 +10,9 @@ Program składa się z dwóch klas: Cell.java oraz Main.java. Klasa Main.java za
     private final float weight; // used for counting f_eq
     private final float tau; // used for counting f_out
 ```
-Każda komórka zawiera trzy tablice: przechowują one cztery wartości, czyli wartości strumieni w każdym z kierunków (rozpatrujemy cztery kierunki). Nazwa każdej z tablic sugeruje wartości, dla jakiego strumienia są przechowywane.
-Poza tymi tablicami znajduje się zmienna odpowiedzialna za stężenie gazu (płynu) w komórce.
-Znajdują się także ustalone na wejściu (w przeciwieństwie do pozostałych pól klasy nie ulegają zmianie podczas działania programu) wartości wag dla kierunków (dla każdego 0.25, potem jest to inicjalizowane) oraz tau. Dla bezpieczeństwa dodałem słowo kluczowe final.
+Each cell contains three tables: they store four values, i.e. the values of streams in each direction (we consider four directions). The name of each array suggests the values for which stream they are stored.
+Outside these tables there is a variable responsible for the concentration of gas (fluid) in the cell.
+There are also values of weights for directions (0.25 for each, then it is initialized) and tau set at the input (unlike the other class fields, they do not change while the program is running). For safety, I added the final keyword.
 ```java
     public Cell() {
         fIn = new float[4];
@@ -28,10 +28,10 @@ Znajdują się także ustalone na wejściu (w przeciwieństwie do pozostałych p
         tau = 1.0f;
     }
 ```
-Podczas tworzenia każdej z komórek, nadawane są wartości stałym (wagi i tau) oraz zerowane są tablice, przechowujące wartości strumieni.
-Pierwsza z metod publicznych oblicza rozkład równowagowy zgodnie ze wzorem:  
+When creating each cell, constant values (weights and tau) are assigned and the tables storing the stream values are reset to zero.  
+The first public method calculates the equilibrium distribution according to the formula:  
 $`f_i^{eq} = w_iC`$  
-Implementacja wygląda następująco. Jest to po prostu pętla iterująca po wszystkich kierunkach i mnożąca wartość stężenia przez wagę (zawsze 0.25).
+The implementation is as follows. It is simply a loop iterating in all directions and multiplying the concentration value by the weight (always 0.25).
 ```java
     public void countFEq() {
         for (int i = 0; i < 4; i++) {
@@ -39,10 +39,10 @@ Implementacja wygląda następująco. Jest to po prostu pętla iterująca po wsz
         }
     }
 ```
-Druga z funkcji służy do obliczenia strumienia wyjściowego. Zastosowałem wzór:  
+The second function is used to calculate the output stream. I used the formula:  
 $`f_i^{out} = f_i^{in} + {\Delta \over \tau} [f_i^{eq} - f_i^{in}]`$  
-Przy czym w programie założyłem tau równe 1. W związku z tym wzór się upraszcza. Strumień wyjściowy jest tak naprawdę strumieniem równowagowym.
-Kod funkcji jest niemal taki sam jak powyższej, jedynie różni się wzorem dla każdej z iteracji.
+In the program, I assumed tau equal to 1. Therefore, the formula simplifies. The output stream is actually the equilibrium stream.
+The code of the function is almost the same as the one above, only the formula differs for each iteration.
 ```java
     public void countFOut() {
         for (int i = 0; i < 4; i++) {
@@ -50,11 +50,11 @@ Kod funkcji jest niemal taki sam jak powyższej, jedynie różni się wzorem dla
         }
     }
 ```
-Ostatnia oblicza strumień wejściowy. Jako argument dostaje tablicę wartości strumieni wyjściowych od sąsiadów:  
+The last one calculates the input stream. As an argument, it receives an array of output stream values from neighbors:  
 $`f_i^{in}(r,t + \Delta t) = f_i^{out} (r - c_i, t)`$   
-Uwaga: w sytuacji, gdy sąsiad to ściana, wartość ta to -1.0. W takiej sytuacji do strumienia wejściowego przypisuję wartość strumienia wyjściowego z tej komórki (gdy ściana jest po prawej, to z prawej strony komórka tyle dostanie, ile by chciała wypuścić w prawo) zgodnie ze wzorem:  
+Note: when the neighbor is a wall, this value is -1.0. In such a situation, I assign the value of the output stream from this cell to the input stream (when the wall is on the right, the cell will receive from the right side as much as it would like to send to the right) according to the formula:  
 $`f_i^{in}(r,t + \Delta t) = f_i^{out} (r, t)`$   
-Implementacja uwzględnia dodatkowo obliczenie nowego stężenia, czyli sumy wartości strumienia wejściowego dla każdego z czterech kierunków. W szczególności, gdy komórka ma za sąsiada ściankę, jest dodawany odpowiedni strumień wyjściowy.
+The implementation additionally takes into account the calculation of a new concentration, i.e. the sum of the input stream values for each of the four directions. In particular, when a cell has a wall as its neighbor, an appropriate output stream is added.
 ```java
     public void countFIn(float[] neighbourFOut) {
         float sum = 0.0f;
@@ -70,9 +70,9 @@ Implementacja uwzględnia dodatkowo obliczenie nowego stężenia, czyli sumy war
         this.c = sum;
     }
 ```
-Poza tymi metodami, w klasie znajdują się gettery i setery.
-Symulację realizuje klasa Main. Na początku znajduje się nadawanie warunków początkowych i tworzenie potrzebnych obiektów.
-Najpierw wykonuję __streaming__. Wywołuję w tym celu dwie metody klasy Cell, które rozkład równowagowy i wyjściowy. Stężenia oblicza wywoływana później metoda, dla pierwszej warunki stężenie brane jest z warunków początkowych.
+In addition to these methods, there are getters and setters in the class.
+The simulation is performed by the Main class. The beginning involves assigning initial conditions and creating the necessary objects.
+First I do __streaming__. For this purpose, I call two methods of the Cell class: equilibrium and output distribution. Concentrations are calculated by the method called later, for the first condition the concentration is taken from the initial conditions.
 ```java
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
@@ -81,7 +81,7 @@ Najpierw wykonuję __streaming__. Wywołuję w tym celu dwie metody klasy Cell, 
                 }
             }
 ```
-Po tym następuje __kolizja__. Patrzę na sąsiadów komórki i pobieram od nich odpowiednie strumienie wyjściowe. Zwracam uwagę tez na to, czy komórka nie ma za sąsiada ścianki. Jeśli tak, to następuje odbicie od niej – przypisuję wartość -1.0, która jest potem odpowiednio interpretowana. Rozbudowany warunek w instrukcji warunkowej jest spowodowany ścianką.
+This is followed by a __collision__. I look at the cell's neighbors and get the appropriate output streams from them. I also pay attention to whether the cell has a wall next to it. If so, it is reflected - I assign a value of -1.0, which is then interpreted appropriately. The extended condition in a conditional statement is caused by a wall.
 ```java
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
@@ -110,7 +110,7 @@ Po tym następuje __kolizja__. Patrzę na sąsiadów komórki i pobieram od nich
                 }
             }
 ```
-Na koniec drukuję obraz, zapisuję go do pliku.
+Finally, I print the image and save it to a file.
 ```java
             // print
             if (it % 1000 == 0) {
@@ -128,18 +128,18 @@ Na koniec drukuję obraz, zapisuję go do pliku.
             }
 ```
 
-# Wyniki modelowania
-Początkowo symulacje uruchomiłem dla obszaru bez ścianki.  
+# Modeling results
+Initially, I ran the simulations for an area without a wall.  
 ![](1.png)  
-Ciekawie widać różnicę na zrzucie ekranu z wieloma zdjęciami (numer oznacza numer iteracji).  
+You can see the difference interestingly in the multi-photo screenshot (the number indicates the iteration number).  
 ![](2.png)  
-Symulacja była prowadzona mniej więcej do osiągnięcia równowagi.  
-Druga symulacja była na obszarze ze ścianką.  
+The simulation was run approximately until equilibrium was reached.
+The second simulation was in the area with a wall.  
 ![](3.png)  
-Zrzut ekranu:  
+Screenshot:  
 ![](4.png)  
-Symulacja nie doprowadziła do równowagi w tej samej ilości iteracji, widać, że przez ściankę utrudnione jest mieszanie. Dlatego tez powtórzyłem to wszystko do osiągnięcia równowagi. Wydruki robione rzadziej.  
+The simulation did not achieve equilibrium in the same number of iterations, it can be seen that the wall makes mixing difficult. Therefore, I repeated it all until I achieved balance. Prints made less frequently.  
 ![](5.png)  
-Stworzyłem na podstawie klatek zdjęć dwa filmiki pokazujące dyfuzję:
-- Obszaru bez ścianki: https://photos.app.goo.gl/yEnRLDcmYQAUeF8u7
-- Obszaru ze ścianką: https://photos.app.goo.gl/w6vKTiXu4MzWB16k8
+I created two videos showing diffusion based on photo frames:
+- Area without wall: https://photos.app.goo.gl/yEnRLDcmYQAUeF8u7
+- Area with a wall: https://photos.app.goo.gl/w6vKTiXu4MzWB16k8
